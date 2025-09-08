@@ -22,7 +22,7 @@ local success, error = pcall(function()
     function ESPManager:Initialize()
 
         self.MAX_DISTANCE = 10000
-        self.ALERT_DISTANCE = 0
+        self.ALERT_DISTANCE = 30
         self.TARGET_FPS = 60
         self.UPDATE_RATE = 1 / self.TARGET_FPS
         self.RELOAD_TIME = 45
@@ -110,7 +110,7 @@ local success, error = pcall(function()
         
         self.playerConnections[player].characterAdded = player.CharacterAdded:Connect(function(character)
             task.spawn(function()
-                wait(0.5)
+                wait(0.5) 
                 
                 if not self.espCache[player] or not character or not character.Parent then
                     return
@@ -215,7 +215,7 @@ local success, error = pcall(function()
         }
         
         local drawings = self.espCache[player].elements
-        
+
         drawings.nickText.Size = 15
         drawings.nickText.Outline = true
         drawings.nickText.Color = playerColor
@@ -237,7 +237,7 @@ local success, error = pcall(function()
         drawings.distanceText.Outline = true
         drawings.distanceText.Color = Color3.fromRGB(200, 200, 255)
         drawings.distanceText.Center = true
-
+        
         drawings.barOutline.Thickness = 2
         drawings.barOutline.Filled = false
         drawings.barOutline.Color = Color3.fromRGB(0, 0, 0)
@@ -251,7 +251,7 @@ local success, error = pcall(function()
         drawings.line.Thickness = 1
         drawings.line.Color = playerColor
         drawings.line.Transparency = 0.8
-        
+
         if player.Character then
             self.espCache[player].highlight = Instance.new("Highlight")
             self.espCache[player].highlight.FillColor = playerColor
