@@ -21,12 +21,12 @@ local success, error = pcall(function()
 
     function ESPManager:Initialize()
 
-        self.MAX_DISTANCE = 500000
+        self.MAX_DISTANCE = math.huge  
         self.ALERT_DISTANCE = 0
-        self.TARGET_FPS = 60
+        self.TARGET_FPS = 55
         self.UPDATE_RATE = 1 / self.TARGET_FPS
-        self.RELOAD_TIME = 45
-        self.RAINBOW_SPEED = 0.5  
+        self.RELOAD_TIME = math.huge   
+        self.RAINBOW_SPEED = 0.5
 
         self.espCache = {}
         self.positionCache = {}
@@ -94,9 +94,7 @@ local success, error = pcall(function()
 
         self.connections.renderStepped = RunService.RenderStepped:Connect(function()
             self:UpdateESP()
-            if tick() - self.reloadTime >= self.RELOAD_TIME then
-                self:Restart()
-            end
+
         end)
 
         self.connections.heartbeat = RunService.Heartbeat:Connect(function()
@@ -344,18 +342,6 @@ local success, error = pcall(function()
             if not posData or not posData.valid then continue end
             
             local distance = (myWorldPosition - posData.position).Magnitude
-            if distance > self.MAX_DISTANCE then
-                if data.lastVisible then
-                    for _, drawing in pairs(data.elements) do
-                        pcall(function() drawing.Visible = false end)
-                    end
-                    if data.highlight then 
-                        pcall(function() data.highlight.Enabled = false end)
-                    end
-                    data.lastVisible = false
-                end
-                continue
-            end
             
             local isAlert = distance <= self.ALERT_DISTANCE and not isDead and not data.isFriend
             if isAlert and not data.lastAlertState and data.alertCooldown <= currentTime then
