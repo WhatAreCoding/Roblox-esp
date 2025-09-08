@@ -21,11 +21,12 @@ local success, error = pcall(function()
 
     function ESPManager:Initialize()
 
-        self.MAX_DISTANCE = 10000
+        self.MAX_DISTANCE = 500000
         self.ALERT_DISTANCE = 0
         self.TARGET_FPS = 60
         self.UPDATE_RATE = 1 / self.TARGET_FPS
         self.RELOAD_TIME = 45
+        self.RAINBOW_SPEED = 0.5  
 
         self.espCache = {}
         self.positionCache = {}
@@ -176,6 +177,11 @@ local success, error = pcall(function()
         return "alive", false
     end
 
+    function ESPManager:GetRainbowColor()
+        local hue = (tick() * self.RAINBOW_SPEED) % 1
+        return Color3.fromHSV(hue, 1, 1)
+    end
+
     function ESPManager:GetPlayerColor(player, isAlert)
         if isAlert then
             return math.sin(tick() * 10) > 0 and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(255, 150, 150)
@@ -183,9 +189,11 @@ local success, error = pcall(function()
         
         local state, isDead = self:GetPlayerState(player)
         if isDead then return Color3.fromRGB(150, 150, 150) end
+        
         if self:IsFriend(player) then
-            return Color3.fromHSV((tick() % 5) / 5, 1, 1)
+            return self:GetRainbowColor()
         end
+        
         if player.Team then return player.Team.TeamColor.Color end
         return Color3.fromRGB(255, 255, 255)
     end
@@ -368,6 +376,21 @@ local success, error = pcall(function()
             local isVisible = headScreenPos.Z > 0
             
             if isVisible then
+                if not data.highlight or not data.highlight.Parent then
+                    if data.highlight then
+                        pcall(function() data.highlight:Destroy() end)
+                    end
+                    data.highlight = Instance.new("Highlight")
+                    data.highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                    data.highlight.FillTransparency = 0.7
+                    data.highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                    data.highlight.Parent = player.Character
+                end
+                
+                if data.highlight then
+                    data.highlight.FillColor = playerColor
+                end
+                
                 if not data.lastVisible then
                     for _, drawing in pairs(drawings) do
                         pcall(function() drawing.Visible = true end)
@@ -421,21 +444,6 @@ local success, error = pcall(function()
                     drawings.line.From = Vector2.new(myScreenPos.X, myScreenPos.Y)
                     drawings.line.To = Vector2.new(headScreenPos.X, headScreenPos.Y)
                 end)
-                
-                if not data.highlight or not data.highlight.Parent or data.highlight.Parent ~= player.Character then
-                    if data.highlight then
-                        pcall(function() data.highlight:Destroy() end)
-                    end
-                    if player.Character then
-                        data.highlight = Instance.new("Highlight")
-                        data.highlight.FillColor = playerColor
-                        data.highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-                        data.highlight.FillTransparency = 0.7
-                        data.highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-                        data.highlight.Parent = player.Character
-                        data.highlight.Enabled = true
-                    end
-                end
                 
             elseif data.lastVisible then
                 for _, drawing in pairs(drawings) do
