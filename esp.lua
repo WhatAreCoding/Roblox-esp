@@ -22,7 +22,7 @@ local success, error = pcall(function()
     function ESPManager:Initialize()
 
         self.MAX_DISTANCE = 10000
-        self.ALERT_DISTANCE = 30
+        self.ALERT_DISTANCE = 0
         self.TARGET_FPS = 60
         self.UPDATE_RATE = 1 / self.TARGET_FPS
         self.RELOAD_TIME = 45
