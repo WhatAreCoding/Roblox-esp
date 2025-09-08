@@ -379,10 +379,10 @@ local success, error = pcall(function()
                 end
                 
                 pcall(function()
-                    drawings.nickText.Position = Vector2.new(headScreenPos.X, headScreenPos.Y - 60)
-                    drawings.hpText.Position = Vector2.new(headScreenPos.X, headScreenPos.Y - 45)
+                    drawings.nickText.Position = Vector2.new(headScreenPos.X, headScreenPos.Y - 57)
+                    drawings.hpText.Position = Vector2.new(headScreenPos.X, headScreenPos.Y - 43)
                     drawings.teamText.Position = Vector2.new(headScreenPos.X, headScreenPos.Y - 30)
-                    drawings.distanceText.Position = Vector2.new(headScreenPos.X, headScreenPos.Y - 15)
+                    drawings.distanceText.Position = Vector2.new(headScreenPos.X, headScreenPos.Y - 19)
                 end)
                 
                 local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
